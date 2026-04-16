@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>NPS Seller Dev BR — Report Semanal | 16/04/2026</title>
+<style>
+  :root{--yellow:#FFE600;--dark:#1a1a2e;--gray:#f5f5f5;--border:#e0e0e0;--green:#00a650;--red:#e84142;--blue:#3483fa;--text:#333;--light-green:#e6f7ee;--light-red:#fdecea;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Proxima Nova',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f0f2f5;color:var(--text);font-size:14px;}
+  .header{background:var(--dark);color:#fff;padding:24px 40px;display:flex;align-items:center;justify-content:space-between;}
+  .header-left h1{font-size:22px;font-weight:800;letter-spacing:-.3px;}
+  .header-left p{font-size:13px;color:#aaa;margin-top:4px;}
+  .header-badge{background:var(--yellow);color:#000;font-weight:700;font-size:12px;padding:6px 14px;border-radius:20px;}
+  .container{max-width:1200px;margin:0 auto;padding:28px 24px 60px;}
+  .section-title{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#888;margin:32px 0 14px;border-left:3px solid var(--yellow);padding-left:10px;}
+  .kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:8px;}
+  .kpi-card{background:#fff;border-radius:10px;padding:18px 20px;border:1px solid var(--border);}
+  .kpi-card .label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.6px;color:#999;margin-bottom:6px;}
+  .kpi-card .value{font-size:28px;font-weight:800;line-height:1;}
+  .kpi-card .sub{font-size:12px;color:#888;margin-top:6px;}
+  .kpi-card .delta{display:inline-flex;align-items:center;gap:4px;font-size:13px;font-weight:700;margin-top:6px;}
+  .pos{color:var(--green);} .neg{color:var(--red);} .neu{color:#888;}
+  .card{background:#fff;border-radius:10px;border:1px solid var(--border);overflow:hidden;margin-bottom:14px;}
+  .card-header{padding:14px 18px;border-bottom:1px solid var(--border);font-weight:700;font-size:14px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+  .card-header .badge{background:var(--gray);color:#666;font-size:11px;font-weight:600;padding:2px 8px;border-radius:10px;}
+  table{width:100%;border-collapse:collapse;}
+  th{background:#fafafa;padding:9px 14px;text-align:right;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#888;border-bottom:1px solid var(--border);}
+  th:first-child{text-align:left;}
+  td{padding:9px 14px;text-align:right;border-bottom:1px solid #f5f5f5;font-size:13px;}
+  td:first-child{text-align:left;font-weight:600;}
+  tr:last-child td{border-bottom:none;}
+  tr.total-row td{background:#fafafa;font-weight:700;border-top:2px solid var(--border);}
+  tr:hover td{background:#fafbff;}
+  .chip{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700;}
+  .chip-pos{background:var(--light-green);color:var(--green);}
+  .chip-neg{background:var(--light-red);color:var(--red);}
+  .chip-neu{background:#f5f5f5;color:#888;}
+  .driver-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .driver-block{background:#fff;border-radius:10px;border:1px solid var(--border);overflow:hidden;}
+  .driver-block-header{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
+  .driver-block-header .driver-name{font-weight:700;font-size:13px;}
+  .driver-meta{font-size:12px;color:#888;margin-top:2px;}
+  .driver-block table th{font-size:10px;padding:7px 12px;}
+  .driver-block table td{font-size:12px;padding:7px 12px;}
+  .info-note{font-size:12px;color:#999;margin-top:6px;padding:8px 14px;background:#fafafa;border-radius:6px;border-left:3px solid var(--yellow);}
+  .deep-dive-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:10px;}
+  .deep-dive-card{border-radius:10px;border:1px solid var(--border);overflow:hidden;}
+  .deep-dive-card-pos{border-top:4px solid var(--green);}
+  .deep-dive-card-neg{border-top:4px solid var(--red);}
+  .deep-dive-header{padding:14px 18px;border-bottom:1px solid var(--border);background:#fff;}
+  .deep-dive-header .dd-title{font-weight:800;font-size:14px;margin-bottom:4px;}
+  .deep-dive-header .dd-proc{font-size:12px;color:#666;margin-top:2px;}
+  .deep-dive-body{padding:14px 18px;background:#fff;}
+  .deep-dive-body ul{list-style:none;padding:0;}
+  .deep-dive-body ul li{font-size:12px;color:#444;line-height:1.6;padding:6px 0;border-bottom:1px solid #f5f5f5;padding-left:16px;position:relative;}
+  .deep-dive-body ul li:last-child{border-bottom:none;}
+  .deep-dive-body ul li::before{content:"•";position:absolute;left:0;font-weight:700;}
+  .deep-dive-body ul li.pos-li::before{color:var(--green);}
+  .deep-dive-body ul li.neg-li::before{color:var(--red);}
+  .dcev-section{background:#fff;border-radius:10px;border:1px solid var(--border);overflow:hidden;margin-top:14px;}
+  .dcev-section-header{padding:14px 20px;border-bottom:1px solid var(--border);background:#fafafa;}
+  .dcev-section-header .dcev-title{font-size:13px;font-weight:800;color:var(--dark);}
+  .dcev-section-header .dcev-sub{font-size:12px;color:#888;margin-top:3px;}
+  .dcev-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;}
+  .dcev-col{padding:16px 18px;border-right:1px solid var(--border);}
+  .dcev-col:last-child{border-right:none;}
+  .dcev-col-title{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px;padding-bottom:6px;border-bottom:2px solid;}
+  .dcev-col-det .dcev-col-title{color:var(--red);border-color:var(--red);}
+  .dcev-col-pro .dcev-col-title{color:var(--green);border-color:var(--green);}
+  .dcev-col-act .dcev-col-title{color:var(--blue);border-color:var(--blue);}
+  .dcev-col ul{list-style:none;padding:0;}
+  .dcev-col ul li{font-size:12px;color:#444;line-height:1.6;padding:6px 0 6px 16px;border-bottom:1px solid #f5f5f5;position:relative;}
+  .dcev-col ul li:last-child{border-bottom:none;}
+  .dcev-col ul li::before{content:"•";position:absolute;left:0;font-weight:700;}
+  .dcev-col-det ul li::before{color:var(--red);}
+  .dcev-col-pro ul li::before{color:var(--green);}
+  .dcev-col-act ul li::before{color:var(--blue);}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <h1>NPS Seller Dev — Brasil</h1>
+    <p>Report Semanal · S1: 06/abr – 12/abr · Centro: BR · Segmento: Seller Dev</p>
+  </div>
+  <div class="header-badge">16/04/2026</div>
+</div>
+
+<div class="container">
+
+  <!-- KPI CARDS -->
+  <div class="section-title">KPIs</div>
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="label">NPS — Semana Atual (S1)</div>
+      <div class="value" style="color:var(--green);">66,30</div>
+      <div class="sub">06/abr – 12/abr · 4.107 pesquisas</div>
+      <div class="delta pos">▲ +2,61 pp vs semana anterior</div>
+    </div>
+    <div class="kpi-card">
+      <div class="label">NPS — Semana Anterior (S2)</div>
+      <div class="value" style="color:var(--blue);">63,69</div>
+      <div class="sub">30/mar – 05/abr · 2.955 pesquisas</div>
+    </div>
+    <div class="kpi-card">
+      <div class="label">NPS — Abril 2026 (M1)</div>
+      <div class="value" style="color:var(--green);">66,17</div>
+      <div class="sub">Abril 2026 · 7.790 pesquisas</div>
+      <div class="delta pos">▲ +0,85 pp vs Março 2026</div>
+    </div>
+    <div class="kpi-card">
+      <div class="label">NPS — Março 2026 (M2)</div>
+      <div class="value" style="color:var(--blue);">65,32</div>
+      <div class="sub">Março 2026 · 14.826 pesquisas</div>
+    </div>
+  </div>
+
+  <!-- EXECUTIVE NARRATIVE -->
+  <div style="background:#fff;border-radius:10px;border:1px solid var(--border);padding:24px 28px;margin-bottom:24px;">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px;">
+      <div>
+        <div style="font-size:17px;font-weight:800;color:var(--dark);">Resumo Executivo — NPS Seller Dev BR</div>
+        <div style="font-size:13px;color:#888;margin-top:3px;">Semana 06/abr – 12/abr · Para reporte ao gerente</div>
+      </div>
+      <div style="text-align:right;">
+        <span style="display:inline-block;background:var(--light-green);color:var(--green);font-weight:800;font-size:15px;padding:6px 16px;border-radius:8px;">NPS S1: 66,30 ▲ +2,61 pp</span>
+        <div style="font-size:11px;color:#888;margin-top:4px;">vs semana anterior (63,69)</div>
+      </div>
+    </div>
+    <hr style="border:none;border-top:1px solid var(--border);margin-bottom:18px;">
+    <div style="margin-bottom:14px;">
+      <div style="font-weight:700;font-size:13px;color:var(--dark);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;">Visão Geral</div>
+      <p style="font-size:13px;color:#444;line-height:1.6;">
+        A semana de <strong>06/abr – 12/abr encerrou em NPS 66,30 (+2,61 pp)</strong> vs semana anterior.
+        No acumulado mensal, <strong>Abril 2026: NPS 66,17 (+0,85 pp vs Março 2026)</strong>, com 7.790 pesquisas.
+        O driver de maior alta foi <strong>ME Vendedor Seller Dev (+0,82 pp)</strong>
+        e o de maior queda foi <strong>Partners (0,20 pp)</strong>.
+      </p>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+      <div style="padding:14px 16px;background:var(--light-green);border-radius:8px;border-left:4px solid var(--green);">
+        <div style="font-weight:700;font-size:13px;color:var(--green);margin-bottom:6px;">▲ Maior alta: ME Vendedor Seller Dev (+0,82 pp)</div>
+        <p style="font-size:12px;color:#333;line-height:1.6;">Processo de maior impacto: <strong>Despacho Ventas y Publicaciones</strong> (VAR +4,48 pp · 1.014 pesquisas). NPS 50,00 → 63,51.</p>
+      </div>
+      <div style="padding:14px 16px;background:var(--light-red);border-radius:8px;border-left:4px solid var(--red);">
+        <div style="font-weight:700;font-size:13px;color:var(--red);margin-bottom:6px;">▼ Maior queda: Partners (0,20 pp)</div>
+        <p style="font-size:12px;color:#333;line-height:1.6;">Processo de maior impacto: <strong>Places Kangu</strong> (VAR -0,84 pp · 158 pesquisas). NPS 74,07 → 68,35.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- DEEP DIVE QUALITATIVO -->
+  <div class="section-title">Deep Dive Qualitativo — 16/04/2026</div>
+  <div class="deep-dive-grid">
+    <div class="deep-dive-card deep-dive-card-pos">
+      <div class="deep-dive-header">
+        <div class="dd-title" style="color:var(--green);">&#9650; Maior Alta &mdash; ME Vendedor Seller Dev (+0,82 pp)</div>
+        <div class="dd-proc">Despacho Ventas y Publicaciones: NPS 50,00% → 63,51% (+13,51 pp) | volume: 476 → 1.014 surveys (+113%) | amostra: 30% analisada com transcrições</div>
+      </div>
+      <div class="deep-dive-body">
+        <ul><li class="pos-li">Tema dominante da semana: DC-e (Declaração de Conteúdo Eletrônica) entrou em vigor em 06/04 — obrigatória para todos os envios via Correios. Gerou alto volume de contatos (+113% em Despacho Ventas y Publicaciones) e foi o principal fator de variação no driver.</li><li class="pos-li">Promotores (NPS 10): atendentes humanos com domínio completo da DC-e (Odicéia, Brenda, Vinícius) resolvem com empatia e solução técnica precisa no 1º contato — clientes aceitam a mudança regulatória quando bem explicada. IA foi citada negativamente (informação errada, encerramento sem resolução).</li><li class="pos-li">Reputação ME foi o contrapeso negativo dentro do driver: NPS caiu de 89,96% para 76,80% (-13,16 pp) com crescimento de volume (478 → 750 surveys). Deterioração da qualidade de atendimento nesse processo específico.</li><li class="pos-li">Reversa contribuiu positivamente: NPS 55,74% → 75,81% (+20,07 pp), volume estável (~124 surveys).</li></ul>
+      </div>
+    </div>
+    <div class="deep-dive-card deep-dive-card-neg">
+      <div class="deep-dive-header">
+        <div class="dd-title" style="color:var(--red);">&#9660; Alerta &mdash; Partners (+0,20 pp)</div>
+        <div class="dd-proc">Places Kangu: 74,07% → 68,35% (-5,72 pp) | volume +46% (108 → 158 surveys)</div>
+      </div>
+      <div class="deep-dive-body">
+        <ul><li class="neg-li">Fim do canal dedicado Kangu: atendimentos caem no Meli com agentes generalistas sem conhecimento de agência de envios — detratores citam explicitamente 'atendentes que não sabem nada de agência de envios' e respostas prontas sem pertinência.</li><li class="neg-li">Recorrência sem resolução: cliente com 6 chamados abertos desde 02/04 (caso #448821746); outro na terceira tentativa sem sucesso (caso #449957379). Atendentes encerram chamado sem resolver.</li><li class="neg-li">Abandono de atendimento e bot sem saída: caso #448814853 — agente não respondeu e finalizou o chat; caso #449441042 — respostas fora de contexto, suspeita de bot.</li><li class="neg-li">Crescimento de volume (+46% semana a semana: 108 → 158 surveys) absorvido por atendentes generalistas → queda no FCR e NPS de 74,07% para 68,35% (-5,72 pp).</li></ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- DC-e ANÁLISE DETALHADA -->
+  <div class="dcev-section">
+    <div class="dcev-section-header">
+      <div class="dcev-title">Análise Detalhada — DC-e (Declaração de Conteúdo Eletrônica) · Despacho Ventas y Publicaciones</div>
+      <div class="dcev-sub">Vigor: 06/04/2026 · Tema dominante da semana · Amostra 30% das transcrições analisadas</div>
+    </div>
+    <div class="dcev-grid">
+      <div class="dcev-col dcev-col-det">
+        <div class="dcev-col-title">Detratores — O que gerou insatisfação</div>
+        <ul><li>DC-e não comunicada antecipadamente: vendedores descobrem o bloqueio no momento do despacho, com prazo de envio em risco (caso #448663844: vendedor com venda em curso bloqueada por não conseguir emitir DC-e; problema de frete calculado incorretamente persistente — caso #449359440).</li><li>Vendedores mobile-only bloqueados: DC-e só funciona via computador ou modo desktop do navegador — app não avisou da mudança (caso #448617368: cliente 'ficou angustiada porque não sabia', vendido 9 NPS mesmo assim).</li><li>IA sem resolução: caso #449138363 — resposta em poucos minutos 'não há erro, encerrando o caso' sem verificar; caso #449210507 — problemas na plataforma desde 06/04 gerando atraso de envio registrado e perda de reputação.</li><li>FCR crítico e falta de leitura do histórico: caso #448663844 — atendentes ensinam a emitir DC-e mas não entendem que o cliente já emite NF e não quer duplicidade. Cada atendente repete as mesmas orientações sem ler contexto.</li></ul>
+      </div>
+      <div class="dcev-col dcev-col-pro">
+        <div class="dcev-col-title">Promotores — O que gerou NPS 10</div>
+        <ul><li>Atendentes humanos com domínio da DC-e geram NPS 10: Odicéia (caso #449811798) resolveu com paciência e escuta real; Vinícius (caso #448569384) resolveu educadamente em menos de 1 atendimento; atendente do WhatsApp (caso #449337950) facilitou a resolução pelo canal preferido do cliente.</li><li>Resolução humanizada compensa a fricção da mudança: clientes aceitam a nova obrigação quando o atendente explica o motivo (norma SEFAZ) e oferece alternativa (modo desktop). A percepção muda de 'problema do ML' para 'adaptação regulatória' (caso #448629160).</li><li>Atendimento rápido e preciso no 1º contato gera NPS 10 mesmo em semana de mudança regulatória: casos #449195295, #449054860, #448874939 — NPS 10 com elogio a clareza e rapidez.</li></ul>
+      </div>
+      <div class="dcev-col dcev-col-act">
+        <div class="dcev-col-title">Ações Recomendadas</div>
+        <ul><li>Comunicar DC-e proativamente para vendedores via app/e-mail antes de bloquear envios — remover o elemento surpresa e evitar registro de atraso de envio por falha informacional.</li><li>Habilitar emissão de DC-e pelo app ou criar fluxo simplificado para usuários mobile (citados explicitamente em múltiplos casos).</li><li>Treinar IA e atendentes de 1ª linha para resolver DC-e sem transferência — montar árvore de decisão por perfil (MEI dispensado de NF, PF, PJ) para evitar respostas genéricas.</li><li>Implementar continuidade de contexto entre atendentes: nenhum cliente deve repetir o problema mais de uma vez (padrão recorrente nesta semana).</li></ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- WEEKLY DRIVERS -->
+  <div class="section-title">Variação Semanal por Driver — MIX/NETO</div>
+  <p class="info-note">S2: 30/mar – 05/abr · S1: 06/abr – 12/abr · NPS Total S2 = 63,69 · NPS Total S1 = 66,30 · Δ = +2,61 pp</p>
+  <div class="card" style="margin-top:10px;">
+    <div class="card-header">Drivers Semanais <span class="badge">MIX + NETO = VAR</span></div>
+    <table>
+      <thead><tr><th>Driver</th><th>Pesq. S2</th><th>NPS S2</th><th>Pesq. S1</th><th>NPS S1</th><th>Share S2</th><th>Share S1</th><th>MIX (pp)</th><th>NETO (pp)</th><th>VAR (pp)</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>ME Vendedor Seller Dev</td>
+          <td>1.270</td><td>67,56</td>
+          <td>2.106</td><td>68,95</td>
+          <td>43.0%</td><td>51.3%</td>
+          <td><span class="chip chip-pos">+0,22</span></td><td><span class="chip chip-pos">+0,60</span></td>
+          <td><span class="chip chip-pos">+0,82</span></td>
+        </tr>
+        <tr>
+          <td>Post Venta Seller Dev</td>
+          <td>233</td><td>58,80</td>
+          <td>301</td><td>66,45</td>
+          <td>7.9%</td><td>7.3%</td>
+          <td><span class="chip chip-neu">-0,00</span></td><td><span class="chip chip-pos">+0,60</span></td>
+          <td><span class="chip chip-pos">+0,60</span></td>
+        </tr>
+        <tr>
+          <td>Publicaciones Seller Dev</td>
+          <td>653</td><td>63,40</td>
+          <td>769</td><td>65,54</td>
+          <td>22.1%</td><td>18.7%</td>
+          <td><span class="chip chip-pos">+0,03</span></td><td><span class="chip chip-pos">+0,47</span></td>
+          <td><span class="chip chip-pos">+0,50</span></td>
+        </tr>
+        <tr>
+          <td>Experiencia Impositiva Seller Dev</td>
+          <td>100</td><td>41,00</td>
+          <td>208</td><td>54,81</td>
+          <td>3.4%</td><td>5.1%</td>
+          <td><span class="chip chip-neg">-0,19</span></td><td><span class="chip chip-pos">+0,47</span></td>
+          <td><span class="chip chip-pos">+0,28</span></td>
+        </tr>
+        <tr>
+          <td>PCF Vendedor Seller Dev</td>
+          <td>125</td><td>48,80</td>
+          <td>136</td><td>50,74</td>
+          <td>4.2%</td><td>3.3%</td>
+          <td><span class="chip chip-pos">+0,14</span></td><td><span class="chip chip-pos">+0,08</span></td>
+          <td><span class="chip chip-pos">+0,22</span></td>
+        </tr>
+        <tr>
+          <td>Partners</td>
+          <td>574</td><td>64,63</td>
+          <td>587</td><td>65,42</td>
+          <td>19.4%</td><td>14.3%</td>
+          <td><span class="chip chip-pos">+0,05</span></td><td><span class="chip chip-pos">+0,15</span></td>
+          <td><span class="chip chip-pos">+0,20</span></td>
+        </tr>
+        <tr class="total-row">
+          <td>TOTAL</td>
+          <td>2.955</td><td>63,69</td>
+          <td>4.107</td><td>66,30</td>
+          <td>100%</td><td>100%</td>
+          <td>0,25</td><td>2,37</td>
+          <td><span class="chip chip-pos">+2,61</span></td>
+        </tr></tbody>
+    </table>
+  </div>
+
+  <!-- MONTHLY DRIVERS -->
+  <div class="section-title">Variação Mensal por Driver — MIX/NETO</div>
+  <p class="info-note">M2: Março 2026 · M1: Abril 2026 · NPS Total M2 = 65,32 · NPS Total M1 = 66,17 · Δ = +0,85 pp</p>
+  <div class="card" style="margin-top:10px;">
+    <div class="card-header">Drivers Mensais <span class="badge">MIX + NETO = VAR</span></div>
+    <table>
+      <thead><tr><th>Driver</th><th>Pesq. Mar</th><th>NPS Mar</th><th>Pesq. Abr</th><th>NPS Abr</th><th>Share Mar</th><th>Share Abr</th><th>MIX (pp)</th><th>NETO (pp)</th><th>VAR (pp)</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>ME Vendedor Seller Dev</td>
+          <td>6.266</td><td>67,09</td>
+          <td>3.768</td><td>68,74</td>
+          <td>42.3%</td><td>48.4%</td>
+          <td><span class="chip chip-pos">+0,16</span></td><td><span class="chip chip-pos">+0,70</span></td>
+          <td><span class="chip chip-pos">+0,86</span></td>
+        </tr>
+        <tr>
+          <td>PCF Vendedor Seller Dev</td>
+          <td>790</td><td>46,84</td>
+          <td>282</td><td>55,32</td>
+          <td>5.3%</td><td>3.6%</td>
+          <td><span class="chip chip-pos">+0,19</span></td><td><span class="chip chip-pos">+0,45</span></td>
+          <td><span class="chip chip-pos">+0,64</span></td>
+        </tr>
+        <tr>
+          <td>Publicaciones Seller Dev</td>
+          <td>3.309</td><td>68,45</td>
+          <td>1.517</td><td>65,66</td>
+          <td>22.3%</td><td>19.5%</td>
+          <td><span class="chip chip-pos">+0,01</span></td><td><span class="chip chip-neg">-0,62</span></td>
+          <td><span class="chip chip-neg">-0,61</span></td>
+        </tr>
+        <tr>
+          <td>Partners</td>
+          <td>2.806</td><td>67,39</td>
+          <td>1.297</td><td>65,46</td>
+          <td>18.9%</td><td>16.6%</td>
+          <td><span class="chip chip-pos">+0,02</span></td><td><span class="chip chip-neg">-0,37</span></td>
+          <td><span class="chip chip-neg">-0,35</span></td>
+        </tr>
+        <tr>
+          <td>Post Venta Seller Dev</td>
+          <td>1.186</td><td>63,32</td>
+          <td>565</td><td>66,19</td>
+          <td>8.0%</td><td>7.3%</td>
+          <td><span class="chip chip-neu">-0,00</span></td><td><span class="chip chip-pos">+0,23</span></td>
+          <td><span class="chip chip-pos">+0,23</span></td>
+        </tr>
+        <tr>
+          <td>Experiencia Impositiva Seller Dev</td>
+          <td>469</td><td>43,50</td>
+          <td>361</td><td>52,63</td>
+          <td>3.2%</td><td>4.6%</td>
+          <td><span class="chip chip-neg">-0,20</span></td><td><span class="chip chip-pos">+0,29</span></td>
+          <td><span class="chip chip-pos">+0,09</span></td>
+        </tr>
+        <tr class="total-row">
+          <td>TOTAL</td>
+          <td>14.826</td><td>65,32</td>
+          <td>7.790</td><td>66,17</td>
+          <td>100%</td><td>100%</td>
+          <td>0,18</td><td>0,68</td>
+          <td><span class="chip chip-pos">+0,85</span></td>
+        </tr></tbody>
+    </table>
+  </div>
+
+  <!-- WEEKLY PROCESS DRILLDOWN -->
+  <div class="section-title">Drilldown Semanal por Processo (Top 3 por Driver)</div>
+  <div class="driver-grid">
+    <div class="driver-block">
+      <div class="driver-block-header">
+        <div>
+          <div class="driver-name">ME Vendedor Seller Dev</div>
+          <div class="driver-meta">NPS S2: 67,56 → S1: 68,95 · 2.106 pesquisas</div>
+        </div>
+        <span class="chip chip-pos">VAR +0,82 pp</span>
+      </div>
+      <table>
+        <thead><tr><th>Processo</th><th>NPS S2</th><th>NPS S1</th><th>Pesq.</th><th>VAR</th></tr></thead>
+        <tbody><tr><td>Reputación ME</td><td>89,96</td><td>76,80</td><td>750</td><td><span class="chip chip-neg">-5,11</span></td></tr><tr><td>Despacho Ventas y Publicaciones</td><td>50,00</td><td>63,51</td><td>1.014</td><td><span class="chip chip-pos">+4,48</span></td></tr><tr><td>Reversa</td><td>55,74</td><td>75,81</td><td>124</td><td><span class="chip chip-pos">+1,67</span></td></tr></tbody>
+      </table>
+    </div>
+    <div class="driver-block">
+      <div class="driver-block-header">
+        <div>
+          <div class="driver-name">Post Venta Seller Dev</div>
+          <div class="driver-meta">NPS S2: 58,80 → S1: 66,45 · 301 pesquisas</div>
+        </div>
+        <span class="chip chip-pos">VAR +0,60 pp</span>
+      </div>
+      <table>
+        <thead><tr><th>Processo</th><th>NPS S2</th><th>NPS S1</th><th>Pesq.</th><th>VAR</th></tr></thead>
+        <tbody><tr><td>Reputación</td><td>59,11</td><td>66,67</td><td>288</td><td><span class="chip chip-pos">+7,30</span></td></tr><tr><td>Anulación de Venta</td><td>50,00</td><td>61,54</td><td>13</td><td><span class="chip chip-pos">+0,36</span></td></tr></tbody>
+      </table>
+    </div>
+    <div class="driver-block">
+      <div class="driver-block-header">
+        <div>
+          <div class="driver-name">Publicaciones Seller Dev</div>
+          <div class="driver-meta">NPS S2: 63,40 → S1: 65,54 · 769 pesquisas</div>
+        </div>
+        <span class="chip chip-pos">VAR +0,50 pp</span>
+      </div>
+      <table>
+        <thead><tr><th>Processo</th><th>NPS S2</th><th>NPS S1</th><th>Pesq.</th><th>VAR</th></tr></thead>
+        <tbody><tr><td>Afiliados ML</td><td>63,48</td><td>72,68</td><td>388</td><td><span class="chip chip-pos">+4,53</span></td></tr><tr><td>PR - Datos Personales</td><td>100,00</td><td>-100,00</td><td>5</td><td><span class="chip chip-neg">-1,24</span></td></tr><tr><td>PR - Propiedad intelectual</td><td>65,96</td><td>52,54</td><td>59</td><td><span class="chip chip-neg">-1,03</span></td></tr></tbody>
+      </table>
+    </div>
+    <div class="driver-block">
+      <div class="driver-block-header">
+        <div>
+          <div class="driver-name">Experiencia Impositiva Seller Dev</div>
+          <div class="driver-meta">NPS S2: 41,00 → S1: 54,81 · 208 pesquisas</div>
+        </div>
+        <span class="chip chip-pos">VAR +0,28 pp</span>
+      </div>
+      <table>
+        <thead><tr><th>Processo</th><th>NPS S2</th><th>NPS S1</th><th>Pesq.</th><th>VAR</th></tr></thead>
+        <tbody><tr><td>Facturación</td><td>24,39</td><td>50,82</td><td>61</td><td><span class="chip chip-pos">+11,31</span></td></tr><tr><td>Datos fiscales</td><td>22,22</td><td>64,71</td><td>17</td><td><span class="chip chip-pos">+3,74</span></td></tr><tr><td>Emision de Nota Fiscal</td><td>58,00</td><td>55,38</td><td>130</td><td><span class="chip chip-neg">-1,24</span></td></tr></tbody>
+      </table>
+    </div>
+    <div class="driver-block">
+      <div class="driver-block-header">
+        <div>
+          <div class="driver-name">PCF Vendedor Seller Dev</div>
+          <div class="driver-meta">NPS S2: 48,80 → S1: 50,74 · 136 pesquisas</div>
+        </div>
+        <span class="chip chip-pos">VAR +0,22 pp</span>
+      </div>
+      <table>
+        <thead><tr><th>Processo</th><th>NPS S2</th><th>NPS S1</th><th>Pesq.</th><th>VAR</th></tr></thead>
+        <tbody><tr><td>Post Compra Funcionalidades Vendedor</td><td>48,80</td><td>50,74</td><td>136</td><td><span class="chip chip-pos">+1,94</span></td></tr></tbody>
+      </table>
+    </div>
+    <div class="driver-block">
+      <div class="driver-block-header">
+        <div>
+          <div class="driver-name">Partners</div>
+          <div class="driver-meta">NPS S2: 64,63 → S1: 65,42 · 587 pesquisas</div>
+        </div>
+        <span class="chip chip-pos">VAR +0,20 pp</span>
+      </div>
+      <table>
+        <thead><tr><th>Processo</th><th>NPS S2</th><th>NPS S1</th><th>Pesq.</th><th>VAR</th></tr></thead>
+        <tbody><tr><td>Drivers</td><td>62,45</td><td>64,34</td><td>429</td><td><span class="chip chip-pos">+1,62</span></td></tr><tr><td>Places Kangu</td><td>74,07</td><td>68,35</td><td>158</td><td><span class="chip chip-neg">-0,84</span></td></tr></tbody>
+      </table>
+    </div></div>
+
+  <!-- MONTHLY PROCESS DRILLDOWN -->
+  <div class="section-title">Drilldown Mensal por Processo (Top 3 por Driver)</div>
+  <div class="driver-grid">
+    <div class="driver-block">
+      <div class="driver-block-header">
+        <div>
+          <div class="driver-name">ME Vendedor Seller Dev</div>
+          <div class="driver-meta">NPS Mar: 67,09 → Abr: 68,74 · 3.768 pesquisas</div>
+        </div>
+        <span class="chip chip-pos">VAR +0,86 pp</span>
+      </div>
+      <table>
+        <thead><tr><th>Processo</th><th>NPS Mar</th><th>NPS Abr</th><th>Pesq.</th><th>VAR</th></tr></thead>
+        <tbody><tr><td>Reversa</td><td>50,90</td><td>63,28</td><td>256</td><td><span class="chip chip-pos">+1,53</span></td></tr><tr><td>Despacho Ventas y Publicaciones</td><td>56,26</td><td>61,81</td><td>1.744</td><td><span class="chip chip-pos">+0,90</span></td></tr><tr><td>Viaje del paquete - Vendedor</td><td>68,95</td><td>52,86</td><td>140</td><td><span class="chip chip-neg">-0,60</span></td></tr></tbody>
+      </table>
+    </div>
+    <div class="driver-block">
+      <div class="driver-block-header">
+        <div>
+          <div class="driver-name">PCF Vendedor Seller Dev</div>
+          <div class="driver-meta">NPS Mar: 46,84 → Abr: 55,32 · 282 pesquisas</div>
+        </div>
+        <span class="chip chip-pos">VAR +0,64 pp</span>
+      </div>
+      <table>
+        <thead><tr><th>Processo</th><th>NPS Mar</th><th>NPS Abr</th><th>Pesq.</th><th>VAR</th></tr></thead>
+        <tbody><tr><td>Post Compra Funcionalidades Vendedor</td><td>46,84</td><td>55,32</td><td>282</td><td><span class="chip chip-pos">+8,48</span></td></tr></tbody>
+      </table>
+    </div>
+    <div class="driver-block">
+      <div class="driver-block-header">
+        <div>
+          <div class="driver-name">Publicaciones Seller Dev</div>
+          <div class="driver-meta">NPS Mar: 68,45 → Abr: 65,66 · 1.517 pesquisas</div>
+        </div>
+        <span class="chip chip-neg">VAR -0,61 pp</span>
+      </div>
+      <table>
+        <thead><tr><th>Processo</th><th>NPS Mar</th><th>NPS Abr</th><th>Pesq.</th><th>VAR</th></tr></thead>
+        <tbody><tr><td>PR - Propiedad intelectual</td><td>73,62</td><td>59,65</td><td>114</td><td><span class="chip chip-neg">-1,01</span></td></tr><tr><td>Afiliados ML</td><td>70,07</td><td>69,08</td><td>760</td><td><span class="chip chip-neg">-0,53</span></td></tr><tr><td>Calidad de foto</td><td>87,23</td><td>46,67</td><td>15</td><td><span class="chip chip-neg">-0,50</span></td></tr></tbody>
+      </table>
+    </div>
+    <div class="driver-block">
+      <div class="driver-block-header">
+        <div>
+          <div class="driver-name">Partners</div>
+          <div class="driver-meta">NPS Mar: 67,39 → Abr: 65,46 · 1.297 pesquisas</div>
+        </div>
+        <span class="chip chip-neg">VAR -0,35 pp</span>
+      </div>
+      <table>
+        <thead><tr><th>Processo</th><th>NPS Mar</th><th>NPS Abr</th><th>Pesq.</th><th>VAR</th></tr></thead>
+        <tbody><tr><td>Drivers</td><td>66,71</td><td>64,35</td><td>1.007</td><td><span class="chip chip-neg">-1,88</span></td></tr><tr><td>Places Kangu</td><td>70,32</td><td>69,31</td><td>290</td><td><span class="chip chip-neg">-0,05</span></td></tr></tbody>
+      </table>
+    </div>
+    <div class="driver-block">
+      <div class="driver-block-header">
+        <div>
+          <div class="driver-name">Post Venta Seller Dev</div>
+          <div class="driver-meta">NPS Mar: 63,32 → Abr: 66,19 · 565 pesquisas</div>
+        </div>
+        <span class="chip chip-pos">VAR +0,23 pp</span>
+      </div>
+      <table>
+        <thead><tr><th>Processo</th><th>NPS Mar</th><th>NPS Abr</th><th>Pesq.</th><th>VAR</th></tr></thead>
+        <tbody><tr><td>Reputación</td><td>64,21</td><td>66,05</td><td>542</td><td><span class="chip chip-pos">+1,77</span></td></tr><tr><td>Anulación de Venta</td><td>41,30</td><td>69,57</td><td>23</td><td><span class="chip chip-pos">+1,11</span></td></tr></tbody>
+      </table>
+    </div>
+    <div class="driver-block">
+      <div class="driver-block-header">
+        <div>
+          <div class="driver-name">Experiencia Impositiva Seller Dev</div>
+          <div class="driver-meta">NPS Mar: 43,50 → Abr: 52,63 · 361 pesquisas</div>
+        </div>
+        <span class="chip chip-pos">VAR +0,09 pp</span>
+      </div>
+      <table>
+        <thead><tr><th>Processo</th><th>NPS Mar</th><th>NPS Abr</th><th>Pesq.</th><th>VAR</th></tr></thead>
+        <tbody><tr><td>Facturación</td><td>28,51</td><td>43,64</td><td>110</td><td><span class="chip chip-pos">+9,71</span></td></tr><tr><td>Datos fiscales</td><td>64,00</td><td>51,52</td><td>33</td><td><span class="chip chip-neg">-1,31</span></td></tr><tr><td>Emision de Nota Fiscal</td><td>58,19</td><td>57,34</td><td>218</td><td><span class="chip chip-pos">+0,75</span></td></tr></tbody>
+      </table>
+    </div></div>
+
+</div>
+</body>
+</html>
